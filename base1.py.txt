@@ -1,0 +1,85 @@
+def create_table():
+    conn = sqlite3.connect('base.db')
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS enseignant(
+          
+            Nom TEXT NOT NULL\,
+            Prenoms TEXT NOT NULL,
+            heure_jour INT NOT NULL,
+            heure_total INT NOT NULL,
+            Filiere TEXT NOT NULL, 
+            Adresse TEXT NOT NULL)''')
+    conn.commit()
+    conn.close()
+
+def retour():
+    fenetreformulaire.destroy()
+    call(["python", "pageintermediaire.py"])
+def ajouter():
+    Nom = Nom_entry.get()
+    Prenoms = prenom_entry.get()
+    heure_jour = date_entry.get()
+    heure_total = tel_entry.get()
+    Filiere = filiere_entry.get()
+    Adresse = adresse_entry.get()
+    if not (  Nom and Prenoms and heure_jour and heure_total and Filiere ):
+        messagebox.showerror("ERROR","Veuillez entrer toutes les informations")
+    else:
+
+        #connexion
+        con = sqlite3.connect('ETUDIANT.db')
+        cuser = con.cursor()
+        cuser.execute("insert into ETUDIANT('Nom','Prenoms','heure_total','heure_jour','Filiere','Adresse') values (?,?,?,?,?,?,?)"Nom,Prenoms,heure_total,Num,Filiere,Adresse))
+        con.commit()
+        con.close()
+        messagebox.showinfo("sucess","ajouter")
+    
+            #afficher
+        con = sqlite3.connect('ETUDIANT.db')
+        cuser = con.cursor()
+        select = cuser.execute("select *from ETUDIANT order by Matricule desc")
+        select = list(select)
+        table.insert('',END,values = select[0])
+        con.close()
+
+def modifier():
+        Matricule =Matricule_entry.get()
+        Nom = Nom_entry.get()
+        Prenoms = prenom_entry.get()
+        heure_total= date_entry.get()
+        heure_jour = tel_entry.get()
+        Filiere = filiere_entry.get()
+        
+        if not ( Nom and Prenoms and heure_total and heure_jour and Filiere ):
+            messagebox.showerror("ERROR","Veuillez choisir l'informations à modifier")
+        else:
+            # Creeon la connexion
+            con = sqlite3.connect('ETUDIANT.db')
+            cuser = con.cursor()
+            cuser.execute("update ETUDIANT set Nom=?,Prenoms=?,Date=?,Numero=?,Filiere=? ,Adresse=? where Matricule=?",(Matricule,Nom,Prenoms,Date,Numero,Filiere,Adresse))
+            con.commit()
+            con.close()
+            messagebox.showinfo('sucess',"vous avez Modifié")
+    
+                # afficher
+            con = sqlite3.connect('ETUDIANT.db')
+            cuser = con.cursor()
+            select = cuser.execute("select * from ETUDIANT ")
+            select = list(select)
+            table.insert('', END, values=select[0])
+            con.close()
+
+
+def supprimer(code = " "):
+    selected_item=table.focus()
+    if not selected_item :
+        messagebox.showerror('ERROR',"Aucune information est sélectionée")
+    else:
+        codeSelectionner = table.item(table.selection())['values'][0]
+        con = sqlite3.connect("ETUDIANT.db")
+        cuser = con.cursor()
+        delete =cuser.execute('delete  from ETUDIANT  ' )
+        con.commit()
+        table.delete(table.selection())
+        messagebox.showinfo("BRAVO","l'information a été supprimée avec Succes")
